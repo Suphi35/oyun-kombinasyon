@@ -184,33 +184,28 @@ class ArenaLabApp:
     def _on_sari_dizi_select(self, event):
         if self._syncing_selection:
             return
-        try:
-            sari_selection = self.sari_dizi_listbox.curselection()
-            if len(sari_selection) == 1:
-                self._syncing_selection = True
-                index = sari_selection[0]
-                if index < self.siyah_dizi_listbox.size():
-                    self.siyah_dizi_listbox.selection_clear(0, tk.END)
-                    self.siyah_dizi_listbox.selection_set(index)
-        except Exception as e:
-            print("Dizi paneli seçim hatası (sarı->siyah):", e)
-        finally:
+        sari_selection = self.sari_dizi_listbox.curselection()
+        # SADECE tekli seçimde karşı tarafı eşle!
+        if len(sari_selection) == 1:
+            self._syncing_selection = True
+            index = sari_selection[0]
+            # Yalnızca siyah listede aynı satırı seç, sarı listede dokunma!
+            if index < self.siyah_dizi_listbox.size():
+                self.siyah_dizi_listbox.selection_clear(0, tk.END)
+                self.siyah_dizi_listbox.selection_set(index)
             self._syncing_selection = False
 
     def _on_siyah_dizi_select(self, event):
         if self._syncing_selection:
             return
-        try:
-            siyah_selection = self.siyah_dizi_listbox.curselection()
-            if len(siyah_selection) == 1:
-                self._syncing_selection = True
-                index = siyah_selection[0]
-                if index < self.sari_dizi_listbox.size():
-                    self.sari_dizi_listbox.selection_clear(0, tk.END)
-                    self.sari_dizi_listbox.selection_set(index)
-        except Exception as e:
-            print("Dizi paneli seçim hatası (siyah->sarı):", e)
-        finally:
+        siyah_selection = self.siyah_dizi_listbox.curselection()
+        if len(siyah_selection) == 1:
+            self._syncing_selection = True
+            index = siyah_selection[0]
+            # Yalnızca sarı listede aynı satırı seç, siyah listede dokunma!
+            if index < self.sari_dizi_listbox.size():
+                self.sari_dizi_listbox.selection_clear(0, tk.END)
+                self.sari_dizi_listbox.selection_set(index)
             self._syncing_selection = False
 
     # --- Kombinasyon paneli fonksiyonları ---
@@ -255,14 +250,13 @@ class ArenaLabApp:
         sari_secim = self.sari_dizi_listbox.curselection()
         siyah_secim = self.siyah_dizi_listbox.curselection()
         if sari_secim:
-            # Büyükten küçüğe silmek önemli!
-            for index in reversed(sari_secim):
-                self.sari_dizi_listbox.delete(index)
-                del self.sari_dizisi[index]
-        if siyah_secim:
-            for index in reversed(siyah_secim):
-                self.siyah_dizi_listbox.delete(index)
-                del self.siyah_dizisi[index]
+            index = sari_secim[0]
+            self.sari_dizi_listbox.delete(index)
+            del self.sari_dizisi[index]
+        elif siyah_secim:
+            index = siyah_secim[0]
+            self.siyah_dizi_listbox.delete(index)
+            del self.siyah_dizisi[index]
         self.dizi_index = 0
 
     def ideal_distansa_konumla(self):
