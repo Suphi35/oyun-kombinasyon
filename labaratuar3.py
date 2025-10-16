@@ -182,34 +182,34 @@ class ArenaLabApp:
         self.animate()
 
     def _on_sari_dizi_select(self, event):
-        """Sarı dizi seçimi değiştiğinde siyah diziyi de senkronize et"""
         if self._syncing_selection:
             return
-        self._syncing_selection = True
         try:
             sari_selection = self.sari_dizi_listbox.curselection()
-            # Önce siyah dizideki tüm seçimleri kaldır
-            self.siyah_dizi_listbox.selection_clear(0, tk.END)
-            # Sarı dizideki seçili indeksleri siyah dizide de seç
-            for index in sari_selection:
+            if len(sari_selection) == 1:
+                self._syncing_selection = True
+                index = sari_selection[0]
                 if index < self.siyah_dizi_listbox.size():
+                    self.siyah_dizi_listbox.selection_clear(0, tk.END)
                     self.siyah_dizi_listbox.selection_set(index)
+        except Exception as e:
+            print("Dizi paneli seçim hatası (sarı->siyah):", e)
         finally:
             self._syncing_selection = False
 
     def _on_siyah_dizi_select(self, event):
-        """Siyah dizi seçimi değiştiğinde sarı diziyi de senkronize et"""
         if self._syncing_selection:
             return
-        self._syncing_selection = True
         try:
             siyah_selection = self.siyah_dizi_listbox.curselection()
-            # Önce sarı dizideki tüm seçimleri kaldır
-            self.sari_dizi_listbox.selection_clear(0, tk.END)
-            # Siyah dizideki seçili indeksleri sarı dizide de seç
-            for index in siyah_selection:
+            if len(siyah_selection) == 1:
+                self._syncing_selection = True
+                index = siyah_selection[0]
                 if index < self.sari_dizi_listbox.size():
+                    self.sari_dizi_listbox.selection_clear(0, tk.END)
                     self.sari_dizi_listbox.selection_set(index)
+        except Exception as e:
+            print("Dizi paneli seçim hatası (siyah->sarı):", e)
         finally:
             self._syncing_selection = False
 
