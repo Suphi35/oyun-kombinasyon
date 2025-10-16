@@ -218,13 +218,13 @@ class ArenaLabApp:
         sari_secim = self.sari_dizi_listbox.curselection()
         siyah_secim = self.siyah_dizi_listbox.curselection()
         if sari_secim:
-            index = sari_secim[0]
-            self.sari_dizi_listbox.delete(index)
-            del self.sari_dizisi[index]
-        elif siyah_secim:
-            index = siyah_secim[0]
-            self.siyah_dizi_listbox.delete(index)
-            del self.siyah_dizisi[index]
+            for index in reversed(sari_secim):
+                self.sari_dizi_listbox.delete(index)
+                del self.sari_dizisi[index]
+        if siyah_secim:
+            for index in reversed(siyah_secim):
+                self.siyah_dizi_listbox.delete(index)
+                del self.siyah_dizisi[index]
         self.dizi_index = 0
 
     def ideal_distansa_konumla(self):
