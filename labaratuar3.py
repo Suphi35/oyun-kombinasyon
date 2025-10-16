@@ -154,7 +154,7 @@ class ArenaLabApp:
         self.siyah_dizisi = []
         self.dizi_index = 0
         self.dizi_animating = False
-        self._syncing_selection = False  # Sonsuz döngüyü önlemek için bayrak
+        # self._syncing_selection = False  # Artık gerek yok
 
         # Listbox seçim senkronizasyonu için event binding
         self.sari_dizi_listbox.bind('<<ListboxSelect>>', self._on_sari_dizi_select)
@@ -181,32 +181,20 @@ class ArenaLabApp:
         self.anim_counter = 0
         self.animate()
 
+    # --- Dizi paneli: Listbox seçim senkronizasyonu ---
+    def _sync_listbox_selection(self, source_listbox, target_listbox):
+        selection = source_listbox.curselection()
+        if selection:
+            index = selection[0]
+            target_listbox.selection_clear(0, tk.END)
+            if index < target_listbox.size():
+                target_listbox.selection_set(index)
+
     def _on_sari_dizi_select(self, event):
-        if self._syncing_selection:
-            return
-        sari_selection = self.sari_dizi_listbox.curselection()
-        # SADECE tekli seçimde karşı tarafı eşle!
-        if len(sari_selection) == 1:
-            self._syncing_selection = True
-            index = sari_selection[0]
-            # Yalnızca siyah listede aynı satırı seç, sarı listede dokunma!
-            if index < self.siyah_dizi_listbox.size():
-                self.siyah_dizi_listbox.selection_clear(0, tk.END)
-                self.siyah_dizi_listbox.selection_set(index)
-            self._syncing_selection = False
+        self._sync_listbox_selection(self.sari_dizi_listbox, self.siyah_dizi_listbox)
 
     def _on_siyah_dizi_select(self, event):
-        if self._syncing_selection:
-            return
-        siyah_selection = self.siyah_dizi_listbox.curselection()
-        if len(siyah_selection) == 1:
-            self._syncing_selection = True
-            index = siyah_selection[0]
-            # Yalnızca sarı listede aynı satırı seç, siyah listede dokunma!
-            if index < self.sari_dizi_listbox.size():
-                self.sari_dizi_listbox.selection_clear(0, tk.END)
-                self.sari_dizi_listbox.selection_set(index)
-            self._syncing_selection = False
+        self._sync_listbox_selection(self.siyah_dizi_listbox, self.sari_dizi_listbox)
 
     # --- Kombinasyon paneli fonksiyonları ---
     def kombinasyon_hamle_ekle(self):
