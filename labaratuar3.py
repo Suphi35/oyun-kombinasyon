@@ -124,9 +124,9 @@ class ArenaLabApp:
 
         tk.Label(self.dizi_panel, text="Sarı Dizisi", bg="#ddf").grid(row=0, column=0, sticky="ew", padx=5)
         tk.Label(self.dizi_panel, text="Siyah Dizisi", bg="#ddf").grid(row=0, column=2, sticky="ew", padx=5)
-        self.sari_dizi_listbox = tk.Listbox(self.dizi_panel, height=5)
+        self.sari_dizi_listbox = tk.Listbox(self.dizi_panel, height=5, selectmode="extended")
         self.sari_dizi_listbox.grid(row=1, column=0, padx=5)
-        self.siyah_dizi_listbox = tk.Listbox(self.dizi_panel, height=5)
+        self.siyah_dizi_listbox = tk.Listbox(self.dizi_panel, height=5, selectmode="extended")
         self.siyah_dizi_listbox.grid(row=1, column=2, padx=5)
 
         tk.Label(self.dizi_panel, text="Sarı dx").grid(row=2, column=0)
